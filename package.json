@@ -28,6 +28,8 @@
     "build": "rimraf dist && tsup --config .config/tsup.config.ts",
     "release": "standard-version",
     "prerelease": "yarn build",
+    "test": "vitest --config .config/vitest.config.ts --run",
+    "test:watch": "vitest --config .config/vitest.config.ts --watch",
     "lint": "eslint --ext .ts ./",
     "lint:staged": "lint-staged --config .config/.lintstagedrc.json",
     "lint:commit": "commitlint --config .config/commitlint.config.ts --edit ",
@@ -35,7 +37,8 @@
     "doc": "typedoc --tsconfig .config/tsconfig/tsconfig.docs.json",
     "doc:gen": "yarn doc:clean && yarn doc",
     "doc:clean": "rimraf docs",
-    "doc:config": "yarn doc --showConfig"
+    "doc:config": "yarn doc --showConfig",
+    "prepare": "husky install .config/husky"
   },
   "author": {
     "name": "Jefferson Venceslau",
@@ -43,10 +46,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/z22092/"
+    "url": "git+https://github.com/z22092/event-polyfill"
   },
   "engines": {
-    "node": ">=14.21.2"
+    "node": ">=10.21.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
@@ -67,19 +70,20 @@
     "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
     "standard-version": "^9.5.0",
+    "tsup": "^6.5.0",
     "tsx": "^3.12.1",
     "typedoc": "^0.23.24",
     "typedoc-plugin-coverage": "^2.0.0",
     "typedoc-plugin-extras": "^2.3.2",
     "typedoc-plugin-mdn-links": "^2.0.2",
     "typedoc-plugin-missing-exports": "^1.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vitest": "^0.27.2"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
-  "dependencies": {},
   "eslintConfig": {
     "extends": ".config/.eslintrc.js"
   }
