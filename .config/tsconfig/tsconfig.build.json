@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES6",
+    "outDir": "../../dist",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": [
+    "../../src/**/*.ts",
+    "../../src/**/*.d.ts",
+  ],
+  "exclude": [
+    "../../src/**/*.spec.ts",
+  ],
+}

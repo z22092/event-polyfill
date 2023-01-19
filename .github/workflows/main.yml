@@ -1,0 +1,77 @@
+name: main-workflow
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-secret:
+    runs-on: ubuntu-latest
+    outputs:
+      key-exist: ${{ steps.key-exist.outputs.defined }}
+    steps:
+      - id: key-exist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: "${{ env.NODE_AUTH_TOKEN != '' }}"
+        run: echo "::set-output name=defined::true"
+
+  test:
+    needs: [check-secret]
+    if: needs.check-secret.outputs.key-exist == 'true'
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        version: [14.x, 16.x, 18.x]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Unit Tests
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
+      - run: yarn
+      - run: yarn test
+
+  build:
+    needs: [test]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Build
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - run: yarn
+      - run: yarn prerelease
+      - run: yarn release
+      - run: |
+          git push --follow-tags
+
+  publish:
+    needs: [build]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Publish
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - run: yarn config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
+      - run: yarn
+      - run: yarn publish --access=public

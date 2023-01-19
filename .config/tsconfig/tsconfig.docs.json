@@ -1,0 +1,30 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES6",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+  },
+  "include": [
+    "../../src/**/*.ts",
+    "../../src/**/*.d.ts"
+  ],
+  "exclude": [
+    "../../src/**/*.spec.ts",
+    "../../node_modules",
+    "../../build.ts",
+    "../../*.js"
+  ],
+  "typedocOptions": {
+    "plugin": [
+      "typedoc-plugin-extras",
+      "typedoc-plugin-mdn-links",
+      "typedoc-plugin-coverage",
+    ],
+    "entryPoints": [
+      "../../src/event.ts"
+    ],
+    "readme": "README.md",
+    "out": "../../docs"
+  },
+}

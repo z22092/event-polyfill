@@ -1,0 +1,9 @@
+build
+.*
+.md
+node_modules
+benchmarks
+./src
+tempCodeRunnerFile*
+docs
+coverage

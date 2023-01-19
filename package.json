@@ -1,36 +1,38 @@
 {
   "name": "@z22092/event-polyfill",
-  "description": "polyfill event",
+  "description": "This library is a polyfill for the Event class for older browsers that do not have native support. This allows your code to continue working on older browsers without having to change your code or use different code paths.",
   "readmeFilename": "README.md",
   "keywords": [
     "event",
     "polyfill"
   ],
-  "main": "dist/index.js",
-  "module": "dist/esm/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/index.esm.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/global.d.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/cjs/index.js"
-    }
+    "default": "./dist/index.cjs.js",
+    "require": "./dist/index.cjs.js",
+    "import": "./dist/index.esm.js",
+    "node": "./dist/index.cjs.js",
+    "types": "./dist/global.d.d.ts"
   },
   "license": "MIT",
-  "version": "0.0.5",
+  "version": "0.0.11",
   "scripts": {
     "start": "node dist",
-    "dev": "ts-node-dev --transpile-only --respawn --project tsconfig.json src/index.ts",
-    "dev:debug": "ts-node-dev --transpile-only --respawn --inspect=4321 --project tsconfig.json src/index.ts",
-    "build": "rimraf dist && tsx ./build.ts",
+    "dev": "tsx --config .config/tsconfig/tsconfig.dev.json src/index.ts",
+    "dev:debug": "tsx --transpile-only --watch --inspect=4321 --project .config/tsconfig/tsconfig.dev.json src/index.ts",
+    "build": "rimraf dist && tsup --config .config/tsup.config.ts",
     "release": "standard-version",
     "prerelease": "yarn build",
     "lint": "eslint --ext .ts ./",
+    "lint:staged": "lint-staged --config .config/.lintstagedrc.json",
+    "lint:commit": "commitlint --config .config/commitlint.config.ts --edit ",
     "lint:fix": "eslint --fix  --ext .ts  ./src",
-    "doc": "typedoc --tsconfig tsconfig/docs.json",
+    "doc": "typedoc --tsconfig .config/tsconfig/tsconfig.docs.json",
     "doc:gen": "yarn doc:clean && yarn doc",
     "doc:clean": "rimraf docs",
     "doc:config": "yarn doc --showConfig"
@@ -53,7 +55,6 @@
     "@typescript-eslint/parser": "^5.48.0",
     "commitizen": "^4.2.6",
     "cz-conventional-changelog": "^3.3.0",
-    "esbuild": "^0.16.12",
     "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-define-config": "^1.13.0",
@@ -66,7 +67,6 @@
     "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
     "standard-version": "^9.5.0",
-    "ts-node-dev": "^2.0.0",
     "tsx": "^3.12.1",
     "typedoc": "^0.23.24",
     "typedoc-plugin-coverage": "^2.0.0",
@@ -76,7 +76,11 @@
     "typescript": "^4.9.4"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org"
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "eslintConfig": {
+    "extends": ".config/.eslintrc.js"
+  }
 }

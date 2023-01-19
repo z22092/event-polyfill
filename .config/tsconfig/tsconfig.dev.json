@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "outDir": "../../dist",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "sourceMap": true
+  },
+  "include": [
+    "../../src/**/*.ts",
+    "../../src/**/*.d.ts",
+  ],
+  "exclude": [
+    "../../src/**/*.spec.ts",
+  ],
+}
