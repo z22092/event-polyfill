@@ -80,9 +80,14 @@ jobs:
           cache: "yarn"
           cache-dependency-path: yarn.lock
 
-      - run: yarn config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
+      # - run: yarn config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
       - run: yarn
-      - run: yarn publish --access=public
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docs:
     permissions:
