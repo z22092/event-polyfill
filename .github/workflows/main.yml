@@ -72,17 +72,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Publish
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
           cache: "yarn"
           cache-dependency-path: yarn.lock
 
-      - run: yarn config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
       - run: yarn
-      - run: yarn publish --access=public
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: "https://npm.pkg.github.com"
+      - name: Publish
+        run: |
+          npm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docs:
     permissions:
