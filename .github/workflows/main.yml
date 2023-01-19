@@ -71,7 +71,43 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18.x"
+          registry-url: "https://registry.npmjs.org"
 
       - run: yarn config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
       - run: yarn
       - run: yarn publish --access=public
+
+  docs:
+    permissions:
+      pages: write
+      id-token: write
+
+    needs: [publish]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: build pages
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: configure git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Generate documents
+        run: yarn doc:gen
+
+      - name: Commit new docs
+        run: |
+          git add docs
+          git commit -m 'docs: add document ref: ${{ github.ref }}'
+#  TODO find way to deploy pages
+
