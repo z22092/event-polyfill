@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.14 (2023-01-21)
+
+
+### Features
+
+* complement docs pipe ([36557d9](https://github.com/z22092/event-polyfill/commit/36557d9b5d421adafb91f11251a4404dddd8227f))
+
 ### 0.0.13 (2023-01-19)
 
 
