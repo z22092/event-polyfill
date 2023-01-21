@@ -102,6 +102,9 @@ jobs:
         run: yarn
 
       - name: Generate documents
+        env:
+          GA_ID: ${{ secrets.GA_ID }}
+
         run: yarn doc:gen
 
       - name: Commit new docs

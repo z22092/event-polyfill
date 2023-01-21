@@ -34,7 +34,7 @@
     "lint:staged": "lint-staged --config .config/.lintstagedrc.json",
     "lint:commit": "commitlint --config .config/commitlint.config.ts --edit ",
     "lint:fix": "eslint --fix  --ext .ts  ./src",
-    "doc": "typedoc --tsconfig .config/tsconfig/tsconfig.docs.json",
+    "doc": "typedoc --options .config/typedoc.js",
     "doc:gen": "yarn doc:clean && yarn doc",
     "doc:clean": "rimraf docs",
     "doc:config": "yarn doc --showConfig",
@@ -47,7 +47,7 @@
   "homepage": "https://z22092.github.io/event-polyfill",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/z22092/event-polyfill"
+    "url": "https://github.com/z22092/event-polyfill"
   },
   "engines": {
     "node": ">=12"

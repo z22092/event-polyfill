@@ -14,17 +14,5 @@
     "../../node_modules",
     "../../build.ts",
     "../../*.js"
-  ],
-  "typedocOptions": {
-    "plugin": [
-      "typedoc-plugin-extras",
-      "typedoc-plugin-mdn-links",
-      "typedoc-plugin-coverage",
-    ],
-    "entryPoints": [
-      "../../src/event.ts"
-    ],
-    "readme": "README.md",
-    "out": "../../docs"
-  },
+  ]
 }

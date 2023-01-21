@@ -1,4 +1,5 @@
 # @z22092/event-polyfill
+---
 
 This library is a polyfill for the Event class for older browsers that do not have native support. This allows your code to continue working on older browsers without having to change your code or use different code paths.
 
