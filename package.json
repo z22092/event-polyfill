@@ -20,7 +20,7 @@
     "types": "./dist/global.d.d.ts"
   },
   "license": "MIT",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "scripts": {
     "start": "node dist",
     "dev": "tsx --config .config/tsconfig/tsconfig.dev.json src/index.ts",
