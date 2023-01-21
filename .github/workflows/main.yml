@@ -40,32 +40,9 @@ jobs:
       - run: yarn
       - run: yarn test
 
-  build:
+  build-publish:
     permissions: write-all
     needs: [test]
-    if: success()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Build
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.x"
-          cache: "yarn"
-          cache-dependency-path: yarn.lock
-      - run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-      - run: yarn
-      - run: yarn prerelease
-      - run: yarn release
-      - run: |
-          git push --follow-tags
-
-  publish:
-    needs: [build]
     if: success()
     runs-on: ubuntu-latest
     steps:
@@ -76,11 +53,21 @@ jobs:
         with:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
+          cache: "yarn"
+          cache-dependency-path: yarn.lock  
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
 
-      - name: Publish
+      - name: build and publish
         run: |
+          yarn
+          yarn prerelease
+          yarn release
+          git push --follow-tags
           yarn publish --verbose
 
   docs:
@@ -93,7 +80,7 @@ jobs:
       group: "pages"
       cancel-in-progress: true
 
-    needs: [publish]
+    needs: [build-publish]
     if: success()
     runs-on: ubuntu-latest
     steps:
