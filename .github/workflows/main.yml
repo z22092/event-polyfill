@@ -1,0 +1,122 @@
+name: main-workflow
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-secret:
+    runs-on: ubuntu-latest
+    outputs:
+      key-exist: ${{ steps.key-exist.outputs.defined }}
+    steps:
+      - id: key-exist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: "${{ env.NODE_AUTH_TOKEN != '' }}"
+        run: echo "::set-output name=defined::true"
+
+  test:
+    needs: [check-secret]
+    if: needs.check-secret.outputs.key-exist == 'true'
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        version: [14.x, 16.x, 18.x]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Unit Tests
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
+          cache: "yarn"
+          cache-dependency-path: yarn.lock
+      - run: yarn
+      - run: yarn test
+
+  build-publish:
+    permissions: write-all
+    needs: [test]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          registry-url: "https://registry.npmjs.org"
+          cache: "yarn"
+          cache-dependency-path: yarn.lock
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: build and publish
+        run: |
+          yarn
+          yarn release
+          git push --follow-tags
+          yarn publish --verbose
+
+  docs:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    concurrency:
+      group: "pages"
+      cancel-in-progress: true
+
+    needs: [build-publish]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: build pages
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          cache: "yarn"
+          cache-dependency-path: yarn.lock
+
+      - name: configure git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Generate documents
+        run: yarn doc:gen
+
+      - name: Commit new docs
+        run: |
+          git add docs
+          git commit -m 'docs: add document ref: ${{ github.ref }}'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "./docs"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

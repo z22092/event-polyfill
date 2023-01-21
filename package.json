@@ -1,0 +1,90 @@
+{
+  "name": "@z22092/event-polyfill",
+  "description": "This library is a polyfill for the Event class for older browsers that do not have native support. This allows your code to continue working on older browsers without having to change your code or use different code paths.",
+  "readmeFilename": "README.md",
+  "keywords": [
+    "event",
+    "polyfill"
+  ],
+  "main": "dist/index.esm.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/global.d.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "default": "./dist/index.cjs.js",
+    "require": "./dist/index.cjs.js",
+    "import": "./dist/index.esm.js",
+    "node": "./dist/index.cjs.js",
+    "types": "./dist/global.d.d.ts"
+  },
+  "license": "MIT",
+  "version": "0.0.16",
+  "scripts": {
+    "start": "node dist",
+    "dev": "tsx --config .config/tsconfig/tsconfig.dev.json src/index.ts",
+    "dev:debug": "tsx --transpile-only --watch --inspect=4321 --project .config/tsconfig/tsconfig.dev.json src/index.ts",
+    "build": "rimraf dist && tsup --config .config/tsup.config.ts",
+    "release": "standard-version",
+    "prerelease": "yarn build",
+    "test": "vitest --config .config/vitest.config.ts --run",
+    "test:watch": "vitest --config .config/vitest.config.ts --watch",
+    "lint": "eslint --ext .ts ./",
+    "lint:staged": "lint-staged --config .config/.lintstagedrc.json",
+    "lint:commit": "commitlint --config .config/commitlint.config.ts --edit ",
+    "lint:fix": "eslint --fix  --ext .ts  ./src",
+    "doc": "typedoc --tsconfig .config/tsconfig/tsconfig.docs.json",
+    "doc:gen": "yarn doc:clean && yarn doc",
+    "doc:clean": "rimraf docs",
+    "doc:config": "yarn doc --showConfig",
+    "prepare": "husky install .config/husky"
+  },
+  "author": {
+    "name": "Jefferson Venceslau",
+    "email": "jeff.venceslau@gmail.com"
+  },
+  "homepage": "https://z22092.github.io/event-polyfill",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/z22092/event-polyfill"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
+    "commitizen": "^4.2.6",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-define-config": "^1.13.0",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.1",
+    "rimraf": "^3.0.2",
+    "standard-version": "^9.5.0",
+    "tsup": "^6.5.0",
+    "tsx": "^3.12.1",
+    "typedoc": "^0.23.24",
+    "typedoc-plugin-coverage": "^2.0.0",
+    "typedoc-plugin-extras": "^2.3.2",
+    "typedoc-plugin-mdn-links": "^2.0.2",
+    "typedoc-plugin-missing-exports": "^1.0.0",
+    "typescript": "^4.9.4",
+    "vitest": "^0.27.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "eslintConfig": {
+    "extends": ".config/.eslintrc.js"
+  }
+}
